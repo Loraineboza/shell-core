@@ -41,7 +41,7 @@ cc -DUSE_READLINE shell.c \
 ./shell
 ```
 
-## Что поддерживает Kernel_shell
+## Что поддерживает shell-core
 
 - Внутренние команды:
   - `cd`, `pwd`, `export`, `unset`, `echo`, `exit`

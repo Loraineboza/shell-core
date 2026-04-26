@@ -453,7 +453,8 @@ static void local_unset(const char *name) {
         if (strcmp(cur->name, name) == 0) {
             if (prev) {
                 prev->next = cur->next;
-            } else {
+            } 
+            else {
                 g_locals = cur->next;
             }
             free(cur->name);
@@ -820,7 +821,8 @@ static int lex_word(const char *line, size_t *i, char **out, int *quoted, char *
             if (line[*i + 1]) {
                 sb_addc(&sb, line[*i + 1]);
                 *i += 2;
-            } else {
+            } 
+            else {
                 *i += 1;
             }
             continue;
@@ -930,7 +932,8 @@ static int lex_word(const char *line, size_t *i, char **out, int *quoted, char *
             const char *home = getenv("HOME");
             if (home) {
                 sb_adds(&sb, home);
-            } else {
+            } 
+            else {
                 sb_addc(&sb, '~');
             }
             *i += 1;
@@ -998,11 +1001,13 @@ static int lex_line(const char *line, TokenVec *tv, char *err, size_t errsz) {
                     if (line[j + 1] == '<') {
                         tk.redir_type = R_HEREDOC;
                         i = j + 2;
-                    } else {
+                    } 
+                    else {
                         tk.redir_type = R_IN;
                         i = j + 1;
                     }
-                } else {
+                } 
+                else {
                     if (line[j + 1] == '&') {
                         size_t k = j + 2;
                         if (!isdigit((unsigned char)line[k])) {
@@ -1023,10 +1028,12 @@ static int lex_line(const char *line, TokenVec *tv, char *err, size_t errsz) {
                         tk.redir_type = R_DUP;
                         tk.redir_dup_fd = atoi(fdnum);
                         i = k;
-                    } else if (line[j + 1] == '>') {
+                    } 
+                    else if (line[j + 1] == '>') {
                         tk.redir_type = R_APPEND;
                         i = j + 2;
-                    } else {
+                    } 
+                    else {
                         tk.redir_type = R_OUT;
                         i = j + 1;
                     }
@@ -1042,7 +1049,8 @@ static int lex_line(const char *line, TokenVec *tv, char *err, size_t errsz) {
             if (line[i + 2] == '>') {
                 tk.redir_type = R_APPEND_ERR;
                 i += 3;
-            } else {
+            } 
+            else {
                 tk.redir_type = R_OUT_ERR;
                 i += 2;
             }
@@ -1057,12 +1065,14 @@ static int lex_line(const char *line, TokenVec *tv, char *err, size_t errsz) {
                     tk.redir_fd = 0;
                     tk.redir_type = R_HEREDOC;
                     i += 2;
-                } else {
+                } 
+                else {
                     tk.redir_fd = 0;
                     tk.redir_type = R_IN;
                     i += 1;
                 }
-            } else {
+            } 
+            else {
                 tk.redir_fd = 1;
                 if (line[i + 1] == '&') {
                     size_t k = i + 2;
@@ -1081,15 +1091,18 @@ static int lex_line(const char *line, TokenVec *tv, char *err, size_t errsz) {
                         tk.redir_type = R_DUP;
                         tk.redir_dup_fd = atoi(fdnum);
                         i = k;
-                    } else {
+                    } 
+                    else {
                         tk.redir_type = R_OUT_ERR;
                         tk.redir_fd = -1;
                         i += 2;
                     }
-                } else if (line[i + 1] == '>') {
+                } 
+                else if (line[i + 1] == '>') {
                     tk.redir_type = R_APPEND;
                     i += 2;
-                } else {
+                } 
+                else {
                     tk.redir_type = R_OUT;
                     i += 1;
                 }
@@ -1427,7 +1440,8 @@ static Node *parse_list(Parser *p) {
             sep = 1;
             while (p_match(p, TOK_SEMI)) {
             }
-        } else if (p_match(p, TOK_AMP)) {
+        } 
+        else if (p_match(p, TOK_AMP)) {
             sep = 2;
         }
 
@@ -1437,7 +1451,8 @@ static Node *parse_list(Parser *p) {
         }
         if (!result) {
             result = item;
-        } else {
+        } 
+        else {
             result = node_bin(NODE_SEQ, result, item);
         }
 
@@ -1473,7 +1488,8 @@ static Node *parse_tokens(Token *toks, size_t ntok, char *err, size_t errsz) {
     if (!root) {
         if (!p.err[0]) {
             snprintf(err, errsz, "syntax error");
-        } else {
+        } 
+        else {
             snprintf(err, errsz, "%s", p.err);
         }
         return NULL;
@@ -1658,7 +1674,8 @@ static void job_remove(Job *j) {
         if (cur == j) {
             if (prev) {
                 prev->next = cur->next;
-            } else {
+            } 
+            else {
                 g_jobs = cur->next;
             }
             job_free(cur);
@@ -1675,9 +1692,11 @@ static int mark_pid_status(pid_t pid, int status) {
             if (j->procs[i].pid == pid) {
                 if (WIFSTOPPED(status)) {
                     j->procs[i].state = PROC_STOPPED;
-                } else if (WIFCONTINUED(status)) {
+                } 
+                else if (WIFCONTINUED(status)) {
                     j->procs[i].state = PROC_RUNNING;
-                } else {
+                } 
+                else {
                     j->procs[i].state = PROC_DONE;
                 }
                 j->procs[i].raw_status = status;
@@ -1718,7 +1737,8 @@ static void update_jobs(int notify) {
             }
             if (prev) {
                 prev->next = next;
-            } else {
+            } 
+            else {
                 g_jobs = next;
             }
             job_free(cur);
@@ -1731,7 +1751,8 @@ static void update_jobs(int notify) {
                 fprintf(stderr, "[%d] Stopped\t%s\n", cur->id, cur->cmdline);
             }
             cur->notified = 1;
-        } else {
+        } 
+        else {
             cur->notified = 0;
         }
 
@@ -1773,7 +1794,8 @@ static void restore_saved_fds(SavedFD *head) {
         if (s->saved >= 0) {
             dup2(s->saved, s->fd);
             close(s->saved);
-        } else {
+        } 
+        else {
             close(s->fd);
         }
         SavedFD *n = s->next;
@@ -1872,7 +1894,8 @@ static int apply_redirs(Redir *r, SavedFD **saved) {
             int oflags = O_WRONLY | O_CREAT;
             if (r->type == R_APPEND_ERR) {
                 oflags |= O_APPEND;
-            } else {
+            } 
+            else {
                 oflags |= O_TRUNC;
             }
             int src = open(r->target, oflags, 0666);
@@ -1900,9 +1923,11 @@ static int apply_redirs(Redir *r, SavedFD **saved) {
 
         if (r->type == R_IN) {
             oflags = O_RDONLY;
-        } else if (r->type == R_OUT) {
+        } 
+        else if (r->type == R_OUT) {
             oflags = O_WRONLY | O_CREAT | O_TRUNC;
-        } else {
+        } 
+        else {
             oflags = O_WRONLY | O_CREAT | O_APPEND;
         }
 
@@ -2032,7 +2057,8 @@ static void restore_temp_assignments(TempAssign *ta, int nassign) {
         }
         if (ta[i].had_old) {
             setenv(ta[i].name, ta[i].old_value ? ta[i].old_value : "", 1);
-        } else {
+        } 
+        else {
             unsetenv(ta[i].name);
         }
         free(ta[i].name);
@@ -2119,7 +2145,8 @@ static int builtin_fg(char **argv, int argc) {
             return 1;
         }
         j = job_find_by_id(id);
-    } else {
+    } 
+    else {
         j = job_find_latest();
     }
 
@@ -2141,7 +2168,8 @@ static int builtin_fg(char **argv, int argc) {
     int st = wait_for_job(j, 1);
     if (job_is_completed(j)) {
         job_remove(j);
-    } else {
+    } 
+    else {
         fprintf(stderr, "[%d] Stopped\t%s\n", j->id, j->cmdline);
         j->notified = 1;
     }
@@ -2162,7 +2190,8 @@ static int builtin_bg(char **argv, int argc) {
             return 1;
         }
         j = job_find_by_id(id);
-    } else {
+    } 
+    else {
         j = job_find_latest();
     }
 
@@ -2192,14 +2221,16 @@ static int builtin_cd(char **argv, int argc) {
         if (!target) {
             target = "/";
         }
-    } else if (strcmp(argv[1], "-") == 0) {
+    } 
+    else if (strcmp(argv[1], "-") == 0) {
         target = getenv("OLDPWD");
         if (!target) {
             fprintf(stderr, "cd: OLDPWD not set\n");
             return 1;
         }
         fprintf(stdout, "%s\n", target);
-    } else {
+    } 
+    else {
         target = argv[1];
     }
 
@@ -2434,7 +2465,8 @@ static int builtin_kill(char **argv, int argc) {
         int n = parse_int(argv[i] + 1, &ok);
         if (ok) {
             sig = n;
-        } else {
+        } 
+        else {
             int s = signal_by_name(argv[i] + 1);
             if (s < 0) {
                 fprintf(stderr, "kill: unknown signal: %s\n", argv[i]);
@@ -2686,7 +2718,8 @@ static int launch_pipeline(Node *pipe_node, int background, const char *cmdline)
             reset_child_signals();
             if (pgid == 0) {
                 setpgid(0, 0);
-            } else {
+            } 
+            else {
                 setpgid(0, pgid);
             }
 
@@ -2744,7 +2777,8 @@ static int launch_pipeline(Node *pipe_node, int background, const char *cmdline)
     int st = wait_for_job(j, 1);
     if (job_is_completed(j)) {
         job_remove(j);
-    } else if (job_is_stopped(j)) {
+    } 
+    else if (job_is_stopped(j)) {
         fprintf(stderr, "[%d] Stopped\t%s\n", j->id, j->cmdline);
         j->notified = 1;
     }
@@ -2792,7 +2826,8 @@ static int launch_single(Node *n, int background, const char *cmdline) {
     int st = wait_for_job(j, 1);
     if (job_is_completed(j)) {
         job_remove(j);
-    } else if (job_is_stopped(j)) {
+    } 
+    else if (job_is_stopped(j)) {
         fprintf(stderr, "[%d] Stopped\t%s\n", j->id, j->cmdline);
         j->notified = 1;
     }
@@ -3316,7 +3351,8 @@ int main(int argc, char **argv) {
         int st = eval_cmdline(cmdline);
         if (g_should_exit) {
             g_last_status = g_exit_status;
-        } else {
+        } 
+        else {
             g_last_status = st;
         }
         fflush(NULL);
